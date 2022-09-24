@@ -58,16 +58,45 @@ void onLightSensorChange()  {
   if (sensor.getLux() > 700)          // if case to check the input value from sensor.
   {
     lightSensor = sensor.getLux();    //input the value from sensor in the pre-defined variable
-    sunlight = true;                  //change the boolean variable to true.
+    sunlight = true;                  //set the boolean variable to true.
     Serial.println(lightSensor);      //show the sensor data onn serial monitor
+    
+    sensor.start();                   //re scan the light intensity inside the value > 700 loop. Done so to get a notification when the lumionsity drops below 700. 
+    
+    if (sensor.hasValue())                        
+    {
+      if (sensor.getLux() < 700)
+      {
+        lightSensor = sensor.getLux();
+        sunlight = false;
+        Serial.println(lightSensor);
+      }
+      
+      else
+      {
+        Serial.println(lightSensor);
+        return;
+      }
+    }
+
   }
   else
   {
-    sunlight = false;                 //change the boolean vartiable to false
-    Serial.println(sensor.getLux());  //print the sensor data on seril monitor
+    sunlight = false;
+    Serial.println(sensor.getLux());  //print the sensor data on serial monitor
   }
   
   delay(3000);
   sensor.start();                     //restart the sensor.
   }
+}
+
+
+
+/*
+  Since Sunlight is READ_WRITE variable, onSunlightChange() is
+  executed every time a new value is received from IoT Cloud.
+*/
+void onSunlightChange()  {
+  // Add your code here to act upon Sunlight change
 }
